@@ -2,12 +2,13 @@
 #include<stdlib.h>
 #include<time.h>
 #include"Game.h"
+using namespace std;
 
 int _testone(int **map,int x,int y){
 	if(x<0||x>9||y<0||y>9){
 		return 0;
 	}
-	if(map[i][j]!=0){
+	if(map[x][y]!=0){
 		return 0;
 	}
 	return 1;
@@ -27,7 +28,7 @@ int _test1(int **map,int x,int y,int color){
 	
 	map[x][y]=color;
 	map[x+1][y-2]=color;
-	map[x+1][y-1]color;
+	map[x+1][y-1]=color;
 	map[x+1][y]=color;
 	map[x+1][y+1]=color;
 	map[x+1][y+2]=color;
@@ -159,7 +160,7 @@ void Game::Game_init(){
 		//飞机头部坐标
 		x1=rand()%10;
 		y1=rand()%10;
-		int mode=_test(map,x1,y1,n+1);
+		int mode=_test(&map,x1,y1,n+1);
 		if(mode==1){
 			plane[n].mode=mode;
 			plane[n].head_x=x1;

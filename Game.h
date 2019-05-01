@@ -17,7 +17,7 @@ class Game
 	int score;			//游戏的分数
 	void Game_init(); 	//初始化游戏的地图
 	void Show_map();
-}
+};
 
 
 #endif
