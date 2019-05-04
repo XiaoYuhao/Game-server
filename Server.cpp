@@ -86,7 +86,7 @@ void Server::login(login_ask_package &p){
 	int res=database.login(username,password,userid);
 	
 	if(res!=1){//登录错误
-		login_reply_package rp(p.func_package.package_seq,0,LOGIN_FAIL,0);//回复报文
+		login_reply_package rp(~p.func_package.package_seq,0,LOGIN_FAIL,0);//回复报文
 		char sendbuf[BUFSIZE];
 		memcpy(sendbuf,&rp,sizeof(rp));
 		send_package(sendbuf,sizeof(rp));
@@ -111,7 +111,7 @@ void Server::login(login_ask_package &p){
 			char sendbuf[BUFSIZE];
 			memcpy(sendbuf,&rp,sizeof(rp));
 			send_package(sendbuf,sizeof(rp));
-			sprintf(temp_log,"Login success(Userid:%d) and replace the old user. Requset from IP:%s Port:%d",userid,inet_ntoa(client.sin_addr),htons(client.sin_port));
+			sprintf(temp_log,"Login success(Userid:%d session:%d) and replace the old user. Requset from IP:%s Port:%d",userid,sess,inet_ntoa(client.sin_addr),htons(client.sin_port));
 			print_log(temp_log);
 		}
 		else{									//此userid不存在session
@@ -159,9 +159,9 @@ void Server::new_game(game_ask_package &p){
 		send_package(sendbuf,sizeof(rp));
 	}
 	else{//非法session值
-		sprintf(temp_log,"Invaild session:%d ask to start new game.",sess);
+		sprintf(temp_log,"Invalid session:%d ask to start new game.",sess);
 		print_log(temp_log);
-		game_reply_package rp(p.func_package.package_seq,INVAILD);
+		game_reply_package rp(p.func_package.package_seq,INVALID);
 		char sendbuf[BUFSIZE];
 		memcpy(sendbuf,&rp,sizeof(rp));
 		send_package(sendbuf,sizeof(rp));
@@ -207,9 +207,9 @@ void Server::game_single(single_ask_package &p){
 		
 	}
 	else{
-		sprintf(temp_log,"Invaild session:%d ask to play game.",sess);
+		sprintf(temp_log,"Invalid session:%d ask to play game.",sess);
 		print_log(temp_log);
-		single_reply_package rp(p.func_package.package_seq,INVAILD,0,0);
+		single_reply_package rp(p.func_package.package_seq,INVALID,0,0);
 		char sendbuf[BUFSIZE];
 		memcpy(sendbuf,&rp,sizeof(rp));
 		send_package(sendbuf,sizeof(rp));
@@ -264,9 +264,9 @@ void Server::game_double(double_ask_package &p){
 		send_package(sendbuf,sizeof(rp));
 	}
 	else{
-		sprintf(temp_log,"Invaild session:%d ask to play game.",sess);
+		sprintf(temp_log,"Invalid session:%d ask to play game.",sess);
 		print_log(temp_log);
-		double_reply_package rp(p.func_package.package_seq,INVAILD,0,0);
+		double_reply_package rp(p.func_package.package_seq,INVALID,0,0);
 		char sendbuf[BUFSIZE];
 		memcpy(sendbuf,&rp,sizeof(rp));
 		send_package(sendbuf,sizeof(rp));
@@ -274,11 +274,36 @@ void Server::game_double(double_ask_package &p){
 	
 }
 
+void Server::reply_alive(alive_ask_package &p){
+	int sess=ntohl(p.session);
+	if(sess_client.count(sess)){//session为合法的session值
+		OnlineClient *oc;
+		oc=sess_client[sess];
+		if(oc->seq==p.func_package.package_seq){//收到的是新的报文
+			oc->seq=~p.func_package.package_seq;
+		}
+		else{//收到的是重复报文
+			//不执行相关操作
+		}
+		print_log("This session is valid.");
+		alive_reply_package rp(oc->seq,VALID);
+		char sendbuf[BUFSIZE];
+		memcpy(sendbuf,&rp,sizeof(rp));
+		send_package(sendbuf,sizeof(rp));
+		
+	}
+	else{//session为非法的session值
+		print_log("This session is invalid.");
+		alive_reply_package rp(p.func_package.package_seq,INVALID);
+		char sendbuf[BUFSIZE];
+		memcpy(sendbuf,&rp,sizeof(rp));
+		send_package(sendbuf,sizeof(rp));
+	}
+}
 void Server::reply(char *recvbuf,int len){
 	char type=recvbuf[0];
 	if(type==LOGIN_REQ){
-		sprintf(temp_log,"This is a Login_req package...");
-		print_log(temp_log);
+		print_log("This is a Login_req package...");
 		login_ask_package p;
 		memcpy(&p,recvbuf,len);
 		login(p);
@@ -290,27 +315,27 @@ void Server::reply(char *recvbuf,int len){
 		
 	}
 	else if(type==GAME_REQ){
-		sprintf(temp_log,"This is a Game_req package...");
-		print_log(temp_log);
+		print_log("This is a Game_req package...");
 		game_ask_package p1;
 		memcpy(&p1,recvbuf,len);
 		new_game(p1);
 	}
 	else if(type==SINGLE_REQ){
-		sprintf(temp_log,"This is a Single_play_req package...");
-		print_log(temp_log);
+		print_log("This is a Single_play_req package...");
 		single_ask_package p2;
 		memcpy(&p2,recvbuf,len);
 		game_single(p2);
 	}
 	else if(type==DOUBLE_REQ){
-		sprintf(temp_log,"This is a Double_play_req package...");
-		print_log(temp_log);
+		print_log("This is a Double_play_req package...");
 		double_ask_package p3;
 		memcpy(&p3,recvbuf,len);
 		game_double(p3);
 	}
 	else if(type==ALIVE_REQ){
+		print_log("This is a Alive_ask package...");
+		alive_ask_package p4;
+		memcpy(&p4,recvbuf,len);
 		
 	}
 	else{

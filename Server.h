@@ -64,6 +64,7 @@ private:
 	void new_game(game_ask_package &p);
 	void game_single(single_ask_package &p);
 	void game_double(double_ask_package &p);
+	void reply_alive(alive_ask_package &p);
 	int newSession();
 	
 public:

@@ -44,9 +44,11 @@ const char WRONG				=0x01;		//否
 const char GAME_OVER			=0x88;		//游戏结束（完全猜中第三架飞机）
 
 const char ALIVE_REQ			=0x30;		//心跳报文
+const char ALIVE_REPLY			=0x90;		//心跳回复报文
 
 const char EMPTY				=0x00;		//填充
-const char INVAILD				=0xff;		//无效请求（掉线）
+const char VALID				=0x08;		//合法请求（未掉线）
+const char INVALID				=0xff;		//无效请求（掉线）
 
 struct functional_package{
 	char package_type;
@@ -299,7 +301,39 @@ struct double_reply_package{
 	}
 };
 
-
+/*
+			心跳包
+| 0x30  | ack	|	0x0008		|
+| 			session 			|
+*/
+struct alive_ask_package{
+	functional_package func_package;
+	int session;
+	alive_ask_package(){}
+	alive_ask_package(char ack,int sess){
+		func_package.package_type=ALIVE_REQ;
+		func_package.package_seq=ack;
+		func_package.package_length=htons(0x0008);
+		session=sess;
+	}
+};
+/*
+			心跳回复包
+| 0x90  | ack	|	0x0008		|
+| result|		   			    | 
+*/
+struct alive_reply_package{
+	functional_package func_package;
+	char result;
+	char empty_area[3];
+	alive_reply_package(){}
+	alive_reply_package(char ack,char res){
+		func_package.package_type=ALIVE_REPLY;
+		func_package.package_seq=ack;
+		func_package.package_length=htons(0x0008);
+		result=res;
+	}
+};
 
 
 #endif
