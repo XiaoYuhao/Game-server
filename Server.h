@@ -29,6 +29,7 @@
 #include <time.h>
 #include <netdb.h>
 #include <limits.h>
+#include <assert.h>
 #include"tools.h"
 #include"OnlineClient.h"
 #include"package.h"

@@ -231,18 +231,20 @@ struct game_ask_package{
 /*
 			回复新游戏
 | 0x80  | ack	|	0x0008		|
-| result|   empty               |
+| result| score |               |
 */
 struct game_reply_package{
 	functional_package func_package;
 	char result;
-	char empty_area[3];
+	char score;
+	char empty_area[2];
 	game_reply_package(){}
-	game_reply_package(char ack,char res){
+	game_reply_package(char ack,char res,char sco=100){
 		func_package.package_type=GAME_REPLY;
 		func_package.package_seq=ack;
 		func_package.package_length=htons(0x0008);
 		result=res;
+		score=sco;
 	}
 };
 

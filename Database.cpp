@@ -189,7 +189,7 @@ int Database::send_query(const char* query,MYSQL_RES **result){
 	print_log(query);
 	if(mysql_query(mysql,query))
 	{
-		cout<<"mysql_query failed("<<mysql_error(mysql)<<")"<<endl;
+		log_stream<<"mysql_query failed("<<mysql_error(mysql)<<")"<<endl;
 		print_log("mysql_query failed");
 		return ERROR;
 	}
@@ -205,7 +205,7 @@ int Database::send_update(const char* query){
 	print_log(query);
 	if(mysql_query(mysql,query))
 	{
-		cout<<"mysql_query failed("<<mysql_error(mysql)<<")"<<endl;
+		log_stream<<"mysql_query failed("<<mysql_error(mysql)<<")"<<endl;
 		print_log("mysql_query failed");
 		return ERROR;
 	}
