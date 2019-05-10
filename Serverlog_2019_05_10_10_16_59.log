@@ -1,0 +1,100 @@
+2019_05_10_10_16_59: server started
+2019_05_10_10_16_59: Create server socket success.
+2019_05_10_10_16_59: Bind() port:23233 success.
+2019_05_10_10_18_09: Recv a Login_req package.Seq:0 from ip:192.168.1.211 port:44812.
+2019_05_10_10_18_09: Debug 3...
+2019_05_10_10_18_09: Login success(Userid:2 session:1500988867). Requset from IP:192.168.1.211 Port:44812
+2019_05_10_10_18_09: Recv a Login_req package.Seq:0 from ip:192.168.1.211 port:44812.
+2019_05_10_10_18_09: The Same login ask(Userid:2 session:1500988867). Requset from IP:192.168.1.211 Port:44812
+2019_05_10_10_18_09: Recv a Game_req package.Seq:1 from ip:192.168.1.211 port:44812.
+2019_05_10_10_18_09: Userid:2 start a new game:
+0 0 0 0 0 0 0 0 3 0 
+0 0 0 0 0 0 3 0 3 0 
+0 0 0 0 0 0 3 3 3 3 
+0 0 0 0 0 0 3 0 3 0 
+0 0 0 0 0 0 2 0 3 0 
+0 0 0 0 1 0 2 0 2 0 
+0 0 1 0 1 2 2 2 2 0 
+0 0 1 1 1 1 2 0 2 0 
+0 0 1 0 1 0 2 0 0 0 
+0 0 0 0 1 0 0 0 0 0 
+No.1:
+	Head:(7,5)
+	Mode:4
+No.2:
+	Head:(6,5)
+	Mode:3
+No.3:
+	Head:(2,9)
+	Mode:4
+2019_05_10_10_18_27: Recv a Single_play_req package.Seq:2 from ip:192.168.1.211 port:44812.
+2019_05_10_10_18_27: Userid:2 Session:1500988867 play single_xy(x:5,y:4).Result:1.Plane:1.Score:99.
+2019_05_10_10_18_27: Recv a Single_play_req package.Seq:3 from ip:192.168.1.211 port:44812.
+2019_05_10_10_18_27: Userid:2 Session:1500988867 play single_xy(x:4,y:4).Result:0.Plane:0.Score:98.
+2019_05_10_10_18_28: Recv a Single_play_req package.Seq:4 from ip:192.168.1.211 port:44812.
+2019_05_10_10_18_28: Userid:2 Session:1500988867 play single_xy(x:6,y:4).Result:1.Plane:1.Score:97.
+2019_05_10_10_18_29: Recv a Single_play_req package.Seq:5 from ip:192.168.1.211 port:44812.
+2019_05_10_10_18_29: Userid:2 Session:1500988867 play single_xy(x:6,y:3).Result:0.Plane:0.Score:96.
+2019_05_10_10_18_30: Recv a Single_play_req package.Seq:6 from ip:192.168.1.211 port:44812.
+2019_05_10_10_18_30: Userid:2 Session:1500988867 play single_xy(x:6,y:5).Result:2.Plane:2.Score:95.
+2019_05_10_10_18_31: Recv a Single_play_req package.Seq:7 from ip:192.168.1.211 port:44812.
+2019_05_10_10_18_31: Userid:2 Session:1500988867 play single_xy(x:7,y:4).Result:1.Plane:1.Score:94.
+2019_05_10_10_18_32: Recv a Single_play_req package.Seq:8 from ip:192.168.1.211 port:44812.
+2019_05_10_10_18_32: Userid:2 Session:1500988867 play single_xy(x:6,y:2).Result:1.Plane:1.Score:93.
+2019_05_10_10_18_38: Recv a Single_play_req package.Seq:9 from ip:192.168.1.211 port:44812.
+2019_05_10_10_18_38: Userid:2 Session:1500988867 play single_xy(x:5,y:8).Result:1.Plane:2.Score:92.
+2019_05_10_10_18_41: Recv a Double_play_req package.Seq:10 from ip:192.168.1.211 port:44812.
+2019_05_10_10_18_41: Userid:2 Session:1500988867 play double_xy(x1:6,y1:5)(x2:6,y2:8).Result:0.Plane:2.Score:92.
+2019_05_10_10_18_52: Recv a Single_play_req package.Seq:11 from ip:192.168.1.211 port:44812.
+2019_05_10_10_18_52: Userid:2 Session:1500988867 play single_xy(x:8,y:1).Result:0.Plane:0.Score:91.
+2019_05_10_10_18_56: Recv a Single_play_req package.Seq:12 from ip:192.168.1.211 port:44812.
+2019_05_10_10_18_56: Userid:2 Session:1500988867 play single_xy(x:7,y:5).Result:2.Plane:1.Score:90.
+2019_05_10_10_18_58: Recv a Double_play_req package.Seq:13 from ip:192.168.1.211 port:44812.
+2019_05_10_10_18_58: Userid:2 Session:1500988867 play double_xy(x1:7,y1:5)(x2:7,y2:2).Result:0.Plane:1.Score:90.
+2019_05_10_10_18_59: Recv a Single_play_req package.Seq:14 from ip:192.168.1.211 port:44812.
+2019_05_10_10_18_59: Userid:2 Session:1500988867 play single_xy(x:2,y:2).Result:0.Plane:0.Score:89.
+2019_05_10_10_19_00: Recv a Single_play_req package.Seq:15 from ip:192.168.1.211 port:44812.
+2019_05_10_10_19_00: Userid:2 Session:1500988867 play single_xy(x:2,y:7).Result:1.Plane:3.Score:88.
+2019_05_10_10_19_02: Recv a Single_play_req package.Seq:16 from ip:192.168.1.211 port:44812.
+2019_05_10_10_19_02: Userid:2 Session:1500988867 play single_xy(x:1,y:5).Result:0.Plane:0.Score:87.
+2019_05_10_10_19_04: Recv a Single_play_req package.Seq:17 from ip:192.168.1.211 port:44812.
+2019_05_10_10_19_04: Userid:2 Session:1500988867 play single_xy(x:1,y:8).Result:1.Plane:3.Score:86.
+2019_05_10_10_19_07: Recv a Single_play_req package.Seq:18 from ip:192.168.1.211 port:44812.
+2019_05_10_10_19_07: Userid:2 Session:1500988867 play single_xy(x:1,y:6).Result:1.Plane:3.Score:85.
+2019_05_10_10_19_09: Recv a Single_play_req package.Seq:19 from ip:192.168.1.211 port:44812.
+2019_05_10_10_19_09: Userid:2 Session:1500988867 play single_xy(x:2,y:9).Result:2.Plane:3.Score:84.
+2019_05_10_10_19_10: Recv a Double_play_req package.Seq:20 from ip:192.168.1.211 port:44812.
+2019_05_10_10_19_10: Userid:2 Session:1500988867 play double_xy(x1:2,y1:9)(x2:2,y2:6).Result:-120.Plane:3.Score:84.
+2019_05_10_10_19_13: Recv a Game_req package.Seq:21 from ip:192.168.1.211 port:44812.
+2019_05_10_10_19_13: Userid:2 start a new game:
+0 0 3 0 0 0 0 0 0 0 
+0 0 3 0 3 0 0 0 0 0 
+0 3 3 3 3 0 0 0 0 0 
+0 0 3 0 3 0 1 1 1 0 
+0 0 3 0 0 0 0 1 0 0 
+0 0 2 2 2 1 1 1 1 1 
+0 0 0 2 0 0 0 1 0 0 
+0 2 2 2 2 2 0 0 0 0 
+0 0 0 2 0 0 0 0 0 0 
+0 0 0 0 0 0 0 0 0 0 
+No.1:
+	Head:(6,7)
+	Mode:2
+No.2:
+	Head:(8,3)
+	Mode:2
+No.3:
+	Head:(2,1)
+	Mode:3
+2019_05_10_10_19_14: Recv a Single_play_req package.Seq:22 from ip:192.168.1.211 port:44812.
+2019_05_10_10_19_14: Userid:2 Session:1500988867 play single_xy(x:5,y:4).Result:1.Plane:2.Score:99.
+2019_05_10_10_19_15: Recv a Single_play_req package.Seq:23 from ip:192.168.1.211 port:44812.
+2019_05_10_10_19_15: Userid:2 Session:1500988867 play single_xy(x:4,y:4).Result:0.Plane:0.Score:98.
+2019_05_10_10_19_16: Recv a Single_play_req package.Seq:24 from ip:192.168.1.211 port:44812.
+2019_05_10_10_19_16: Userid:2 Session:1500988867 play single_xy(x:5,y:5).Result:1.Plane:1.Score:97.
+2019_05_10_10_19_16: Recv a Single_play_req package.Seq:25 from ip:192.168.1.211 port:44812.
+2019_05_10_10_19_16: Userid:2 Session:1500988867 play single_xy(x:6,y:4).Result:0.Plane:0.Score:96.
+2019_05_10_10_19_17: Recv a Single_play_req package.Seq:26 from ip:192.168.1.211 port:44812.
+2019_05_10_10_19_17: Userid:2 Session:1500988867 play single_xy(x:6,y:5).Result:0.Plane:0.Score:95.
+2019_05_10_10_19_19: Recv a Logout_req package.Seq:27 from ip:192.168.1.211 port:44812.
+2019_05_10_10_19_19: userid:2,seesion:1500988867 logout success. Requset from IP:192.168.1.211 Port:44812

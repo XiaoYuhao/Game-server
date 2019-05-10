@@ -30,7 +30,7 @@ Database::Database(){
 }
 
 Login_status Database::login(string username,string password,short &userid){
-	MYSQL_RES *result;
+	MYSQL_RES *result=NULL;//若不设置初始值为NULL，则mysql_free_result时可能会出错！
 	MYSQL_ROW row;
 	
 	sprintf(query,
@@ -147,7 +147,7 @@ int Database::get_score(short userid,short &score){
 			user_table_name.c_str(),
 			userid);
 	
-	MYSQL_RES *result;
+	MYSQL_RES *result=NULL;
 	MYSQL_ROW row;
 	
 	if(send_query(query,&result)==ERROR){
@@ -220,7 +220,7 @@ short Database::get_userid(string username){
 			user_table_name.c_str(),
 			username.c_str());
 	
-	MYSQL_RES *result;
+	MYSQL_RES *result=NULL;
 	MYSQL_ROW row;
 	
 	if(send_query(query,&result)==ERROR){

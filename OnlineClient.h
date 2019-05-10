@@ -9,7 +9,7 @@ public:
 	Game g;
 	int session;
 	int userid;
-	int seq;
+	char seq;
 	
 	struct sockaddr_in client;
 	OnlineClient(){};

@@ -52,7 +52,8 @@ void Server::startup(){
 		print_err_log("Bind() error.");
 		exit(1);
 	}
-	print_log("Bind() success.");
+	sprintf(temp_log,"Bind() port:%d success.",server_port);
+	print_log(temp_log);
 	
 }
 
@@ -86,7 +87,7 @@ void Server::login(login_ask_package &p){
 	int res=database.login(username,password,userid);
 	//print_log("Debug 0...");
 	if(res!=1){//登录错误
-		login_reply_package rp(~p.func_package.package_seq,0,LOGIN_FAIL,0);//回复报文
+		login_reply_package rp(1+p.func_package.package_seq,0,LOGIN_FAIL,0);//回复报文
 		char sendbuf[BUFSIZE];
 		memcpy(sendbuf,&rp,sizeof(rp));
 		send_package(sendbuf,sizeof(rp));
@@ -99,7 +100,10 @@ void Server::login(login_ask_package &p){
 			OnlineClient *old_oc;
 			assert(sess_client.count(old_sess));
 			old_oc=sess_client[old_sess];
-			if(inet_ntoa(old_oc->client.sin_addr)==inet_ntoa(client.sin_addr)&&old_oc->client.sin_port==client.sin_port){//同一个登录请求
+			time_t old_time=sess_time[old_sess];
+			time_t new_time=time(0);
+			
+			if((new_time-2<=old_time)&&inet_ntoa(old_oc->client.sin_addr)==inet_ntoa(client.sin_addr)&&old_oc->client.sin_port==client.sin_port){//同一个登录请求
 				int sess=old_oc->session; 
 				short score=100;
 				database.get_score(userid,score);
@@ -120,17 +124,22 @@ void Server::login(login_ask_package &p){
 				sess_client[sess]=new OnlineClient;
 				sess_client[sess]->session=sess;
 				sess_client[sess]->userid=userid;
-				sess_client[sess]->seq=~p.func_package.package_seq;
+				sess_client[sess]->seq=1+p.func_package.package_seq;
 				//print_log("Debug 2...");
 				short score;
 				database.get_score(userid,score);
 				
-				time_t old_time,new_time;
-				old_time=sess_time[old_sess];
-				new_time=time(0);
+				//time_t old_time,new_time;
+				//old_time=sess_time[old_sess];
+				//new_time=time(0);
 				sess_time.erase(old_sess);
 				sess_time.insert(map<int,time_t>::value_type(sess,new_time));
+				//
+				sprintf(temp_log,"Debug:new_time:%d old_time:%d",new_time,old_time);
+				print_log(temp_log);
+				//
 				if(new_time-2>old_time){//旧session值最后报文时间old_time早于当前时间2秒，用户不在线（但是没有发退出请求）
+					print_log("Debug 1...");
 					login_reply_package rp(sess_client[sess]->seq,sess,LOGIN_SUCCESS,(char)score);//回复报文
 					char sendbuf[BUFSIZE];
 					memcpy(sendbuf,&rp,sizeof(rp));
@@ -139,6 +148,7 @@ void Server::login(login_ask_package &p){
 					print_log(temp_log);
 				}
 				else{//旧session值用户仍然在线
+					print_log("Debug 2...");
 					login_reply_package rp(sess_client[sess]->seq,sess,LOGIN_REPLACE,(char)score);//回复报文
 					char sendbuf[BUFSIZE];
 					memcpy(sendbuf,&rp,sizeof(rp));
@@ -151,7 +161,7 @@ void Server::login(login_ask_package &p){
 			}
 		}
 		else{						//此userid不存在session
-			//print_log("Debug 3...");
+			print_log("Debug 3...");
 			int sess=newSession();
 			id_session.insert(map<short,int>::value_type(userid,sess));
 			//id_session.insert(userid);
@@ -161,8 +171,9 @@ void Server::login(login_ask_package &p){
 			sess_client[sess]=new OnlineClient;
 			sess_client[sess]->session=sess;
 			sess_client[sess]->userid=userid;
-			sess_client[sess]->seq=~p.func_package.package_seq;
+			sess_client[sess]->seq=1+p.func_package.package_seq;
 			//print_log("Debug 4...");
+			sess_time.insert(map<int,time_t>::value_type(sess,time(0)));
 			short score;
 			database.get_score(userid,score);
 			login_reply_package rp(sess_client[sess]->seq,sess,LOGIN_SUCCESS,(char)score);//回复报文
@@ -192,7 +203,7 @@ void Server::logout(logout_ask_package &p){
 		sprintf(temp_log,"userid:%d,seesion:%d logout success. Requset from IP:%s Port:%d",userid,sess,inet_ntoa(client.sin_addr),ntohs(client.sin_port));
 		print_log(temp_log);
 	}
-	logout_reply_package rp(~p.func_package.package_seq,LOGOUT_SUCCESS);
+	logout_reply_package rp(1+p.func_package.package_seq,LOGOUT_SUCCESS);
 	char sendbuf[BUFSIZE];
 	memcpy(sendbuf,&rp,sizeof(rp));
 	send_package(sendbuf,sizeof(rp));
@@ -209,7 +220,7 @@ void Server::new_game(game_ask_package &p){
 			sprintf(temp_log,"Userid:%d start a new game:",oc->userid);
 			print_log(temp_log);
 			oc->g.Print_map(log_file_stream);
-			oc->seq=~p.func_package.package_seq;
+			oc->seq=1+p.func_package.package_seq;
 		}
 		else{//收到的是重复报文
 			//不执行相关操作
@@ -256,7 +267,7 @@ void Server::game_single(single_ask_package &p){
 			else{
 				oc->g.setRes_Pla(PLANE_HEAD,res-PLANE_HEAD-1);
 			}
-			oc->seq=~p.func_package.package_seq;
+			oc->seq=1+p.func_package.package_seq;
 			sprintf(temp_log,"Userid:%d Session:%d play single_xy(x:%d,y:%d).Result:%d.Plane:%d.Score:%d.",oc->userid,oc->session,x,y,oc->g.getRes(),oc->g.getPla(),oc->g.getScore());
 			print_log(temp_log);
 		}
@@ -314,7 +325,7 @@ void Server::game_double(double_ask_package &p){
 				}
 				
 			}
-			oc->seq=~p.func_package.package_seq;
+			oc->seq=1+p.func_package.package_seq;
 			sprintf(temp_log,"Userid:%d Session:%d play double_xy(x1:%d,y1:%d)(x2:%d,y2:%d).Result:%d.Plane:%d.Score:%d.",oc->userid,oc->session,x1,y1,x2,y2,oc->g.getRes(),oc->g.getPla(),oc->g.getScore());
 			print_log(temp_log);
 		}
@@ -346,15 +357,15 @@ void Server::reply_alive(alive_ask_package &p){
 	if(sess_client.count(sess)){//session为合法的session值
 		OnlineClient *oc;
 		oc=sess_client[sess];
-		if(oc->seq==p.func_package.package_seq){//收到的是新的报文
-			oc->seq=~p.func_package.package_seq;
+		/*if(oc->seq==p.func_package.package_seq){//收到的是新的报文
+			oc->seq=1+p.func_package.package_seq;
 		}
 		else{//收到的是重复报文
 			//不执行相关操作
 			print_log("The same alive_aks_package...");
-		}
+		}*/
 		//print_log("This session is valid.");
-		alive_reply_package rp(oc->seq,VALID);
+		alive_reply_package rp(1+p.func_package.package_seq,VALID);
 		char sendbuf[BUFSIZE];
 		memcpy(sendbuf,&rp,sizeof(rp));
 		send_package(sendbuf,sizeof(rp));
@@ -362,7 +373,7 @@ void Server::reply_alive(alive_ask_package &p){
 	}
 	else{//session为非法的session值
 		print_log("This session is invalid.");
-		alive_reply_package rp(p.func_package.package_seq,INVALID);
+		alive_reply_package rp(1+p.func_package.package_seq,INVALID);
 		char sendbuf[BUFSIZE];
 		memcpy(sendbuf,&rp,sizeof(rp));
 		send_package(sendbuf,sizeof(rp));
@@ -371,9 +382,11 @@ void Server::reply_alive(alive_ask_package &p){
 void Server::reply(char *recvbuf,int len){
 	char type=recvbuf[0];
 	if(type==LOGIN_REQ){
-		print_log("This is a Login_req package...");
+		//print_log("This is a Login_req package...");
 		login_ask_package p;
 		memcpy(&p,recvbuf,len);
+		sprintf(temp_log,"Recv a Login_req package.Seq:%d from ip:%s port:%d.",p.func_package.package_seq,inet_ntoa(client.sin_addr),htons(client.sin_port));
+		print_log(temp_log);
 		login(p);
 	}
 	else if(type==NAME_REQ){
@@ -383,43 +396,53 @@ void Server::reply(char *recvbuf,int len){
 		//暂时不支持此功能
 	}
 	else if(type==GAME_REQ){
-		print_log("This is a Game_req package...");
+		//print_log("This is a Game_req package...");
 		game_ask_package p1;
-		int sess=p1.session;
-		sess_time[sess]=time(0);
 		memcpy(&p1,recvbuf,len);
+		int sess=ntohl(p1.session);
+		sess_time[sess]=time(0);
+		sprintf(temp_log,"Recv a Game_req package.Seq:%d from ip:%s port:%d.",p1.func_package.package_seq,inet_ntoa(client.sin_addr),htons(client.sin_port));
+		print_log(temp_log);
 		new_game(p1);
 	}
 	else if(type==SINGLE_REQ){
-		print_log("This is a Single_play_req package...");
+		//print_log("This is a Single_play_req package...");
 		single_ask_package p2;
-		int sess=p2.session;
-		sess_time[sess]=time(0);
 		memcpy(&p2,recvbuf,len);
+		int sess=ntohl(p2.session);
+		sess_time[sess]=time(0);
+		sprintf(temp_log,"Recv a Single_play_req package.Seq:%d from ip:%s port:%d.",p2.func_package.package_seq,inet_ntoa(client.sin_addr),htons(client.sin_port));
+		print_log(temp_log);
 		game_single(p2);
 	}
 	else if(type==DOUBLE_REQ){
-		print_log("This is a Double_play_req package...");
+		//print_log("This is a Double_play_req package...");
 		double_ask_package p3;
-		int sess=p3.session;
-		sess_time[sess]=time(0);
 		memcpy(&p3,recvbuf,len);
+		int sess=ntohl(p3.session);
+		sess_time[sess]=time(0);
+		sprintf(temp_log,"Recv a Double_play_req package.Seq:%d from ip:%s port:%d.",p3.func_package.package_seq,inet_ntoa(client.sin_addr),htons(client.sin_port));
+		print_log(temp_log);
 		game_double(p3);
 	}
 	else if(type==ALIVE_REQ){
 		//print_log("This is a Alive_ask package...");
 		alive_ask_package p4;
-		int sess=p4.session;
-		sess_time[sess]=time(0);
 		memcpy(&p4,recvbuf,len);
+		int sess=ntohl(p4.session);
+		sess_time[sess]=time(0);
+		//sprintf(temp_log,"This is a Alive_ask package.Seq:%d ",p4.func_package.package_seq);
+		//print_log(temp_log);
 		reply_alive(p4);
 	}
 	else if(type==LOGOUT_REQ){
-		print_log("This is a Logout_req package...");
+		//print_log("This is a Logout_req package...");
 		logout_ask_package p5;
-		int sess=p5.session;
-		sess_time[sess]=time(0);
 		memcpy(&p5,recvbuf,len);
+		int sess=ntohl(p5.session);
+		sess_time[sess]=time(0);
+		sprintf(temp_log,"Recv a Logout_req package.Seq:%d from ip:%s port:%d.",p5.func_package.package_seq,inet_ntoa(client.sin_addr),htons(client.sin_port));
+		print_log(temp_log);
 		logout(p5);
 	}
 /*	switch (type){
@@ -475,9 +498,9 @@ void Server::work(){
 			print_err_log("recvfrom() error.");
 			exit(1);
 		}
-		sprintf(temp_log,"Server got a message from a client whose ip is %s,port is %d.",inet_ntoa(client.sin_addr),htons(client.sin_port));
-		string content(temp_log);
-		print_log(content);
+		//sprintf(temp_log,"Server got a message from a client whose ip is %s,port is %d.",inet_ntoa(client.sin_addr),htons(client.sin_port));
+		//string content(temp_log);
+		//print_log(content);
 		reply(recvbuf,num);
 		
 	}

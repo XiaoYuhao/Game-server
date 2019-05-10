@@ -1,0 +1,17 @@
+Time: 2019_05_10_10_18_09: select count(*) from USER where username='xiao'
+Time: 2019_05_10_10_18_09: select count(*) from USER where username='xiao' and password='e10adc3949ba59abbe56e057f20f883e'
+Time: 2019_05_10_10_18_09: username matches password
+Time: 2019_05_10_10_18_09: select id from USER where username = 'xiao';
+Time: 2019_05_10_10_18_09: update user login time to current time
+Time: 2019_05_10_10_18_09: update USER set logintime=FROM_UNIXTIME(1557454689) where id= 2;
+Time: 2019_05_10_10_18_09: select score from USER where id = 2;
+Time: 2019_05_10_10_18_09: select count(*) from USER where username='xiao'
+Time: 2019_05_10_10_18_09: select count(*) from USER where username='xiao' and password='e10adc3949ba59abbe56e057f20f883e'
+Time: 2019_05_10_10_18_09: username matches password
+Time: 2019_05_10_10_18_09: select id from USER where username = 'xiao';
+Time: 2019_05_10_10_18_09: update user login time to current time
+Time: 2019_05_10_10_18_09: update USER set logintime=FROM_UNIXTIME(1557454689) where id= 2;
+Time: 2019_05_10_10_18_09: select score from USER where id = 2;
+Time: 2019_05_10_10_19_10: select score from USER where id = 2;
+Time: 2019_05_10_10_19_10: update USER set score= 84 where id = 2;
+Time: 2019_05_10_10_19_10: update score query success

@@ -4,8 +4,9 @@ using namespace std;
 //#include"Game.h"
 //#include"OnlineClient.h"
 #include"Server.h"
+#include<cstring>
 
-int main(){
+int main(int argc,char *argv[]){
 /*	Game g;
 	g.Game_init();
 	g.Show_map();
@@ -28,9 +29,11 @@ int main(){
 		cout<<username<<" Login failed!"<<endl;
 	}
 	database.update_username(userid,"xiaoxiao");
-*/
+*/	if(argc!=2){
+		cout<<"Parameter Error！Usage: [port]"<<endl;
+	}
 	daemon(1,1); 
-	Server server;
+	Server server(atoi(argv[1]));
 	server.work();
 	return 0;
 }
